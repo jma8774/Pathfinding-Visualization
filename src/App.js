@@ -3,25 +3,30 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import HelpIcon from '@mui/icons-material/Help';
+import { UNVISITED, VISITED, PATH, START, END, WALL, WEIGHT } from './constants';
 import Node from './Node'
+import HelpBox from './components/HelpBox'
 import bfs from './algos/BFS'
 import dfs from './algos/DFS'
-
-const UNVISITED = 0
-const VISITED = 1
-const PATH = 2
-const START = 3
-const END = 4
-const WALL = 5
+import bidirectional from './algos/Bidirectional'
 
 const n = 20
 const m = 45
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
 function App() {
   const [grid, setGrid] = useState(Array(n).fill(UNVISITED).map(() => new Array(m).fill(UNVISITED)))
-  const [start, setStart] = useState([3, 3])
-  const [end, setEnd] = useState([6, 6])
+  const [weight, setWeight] = useState(Array(n).fill(1).map(() => new Array(m).fill(1)))
+  const [start, setStart] = useState([getRandomInt(n), getRandomInt(m)])
+  const [end, setEnd] = useState([getRandomInt(n), getRandomInt(m)])
   const [running, setRunning] = useState(false)
+  const [message, setMessage] = useState('Hi there, welcome to the pathfinding visualizer! If you need help, click on the question mark icon. ')
 
   const updateCell = (i, j, val) => {
     setGrid(prevState => {
@@ -31,6 +36,18 @@ function App() {
     })
   }
   
+  const randomStartEnd = () => {
+    clearPaths()
+    updateCell(start[0], start[1], 0)
+    updateCell(end[0], end[1], 0)
+    const newStart = [getRandomInt(n), getRandomInt(m)]
+    const newEnd = [getRandomInt(n), getRandomInt(m)]
+    setStart(newStart)
+    setEnd(newEnd)
+    updateCell(newStart[0], newStart[1], START)
+    updateCell(newEnd[0], newEnd[1], END)
+  }
+
   const clearPaths = () => {
     setGrid(prevState => {
       const copy = [...prevState]
@@ -76,16 +93,9 @@ function App() {
   }
 
   useEffect(() => {
-    // Starting Point
-    updateCell(start[0], start[1], 3) 
-    // End Point
-    updateCell(end[0], end[1], 4)
+    randomStartEnd()
   }, [])
   
-  useEffect(() => {
-    // console.log("Grid Changed", grid)
-  }, [grid])
-
   return (
     <Box>
       <Typography variant="h4" sx={{textAlign: "center", mt: 6}}> Pathfinding Algorithm Visualization </Typography>
@@ -94,16 +104,32 @@ function App() {
           setRunning(true)
           clearPaths()
           bfs(grid, updateCell, start[0], start[1], () => setRunning(false))
+          setMessage("BFS guarantee that we will travel the shortest path in an unweighted graph")
         }}> BFS </Button>
         <Button variant="contained" disabled={running} onClick={() => {
           setRunning(true)
           clearPaths()
           dfs(grid, updateCell, start[0], start[1], () => setRunning(false))
+          setMessage("DFS does not guarantee that we will travel the shortest path")
         }}> DFS </Button>
+                <Button variant="contained" disabled={running} onClick={() => {
+          setRunning(true)
+          clearPaths()
+          bidirectional(grid, updateCell, start, end, () => setRunning(false))
+          setMessage("Bidirectional search will find the shortest path between 2 nodes in an unweighted graph")
+        }}> Bidirectional Search </Button>
+        <Button variant="contained" color="secondary" disabled={running} onClick={() => console.log("Create Weighted Cell")}> Create Weight (WIP) </Button>
         <Button variant="outlined" disabled={running} onClick={resetGrid}> Reset </Button>
+        <Button variant="outlined" disabled={running} onClick={randomStartEnd}> Random Start/End </Button>
         <Button variant="outlined" disabled={running} onClick={generateWalls}> Generate Walls </Button>
+        <Tooltip title={<HelpBox/>}>
+          <IconButton>
+            <HelpIcon />
+          </IconButton>
+        </Tooltip>
       </Stack>
-      <Typography variant="body1" textAlign="center" mt={2}> You can create walls by holding left click and move the start and end points by dragging them </Typography>
+      <Typography variant="body1" textAlign="center" mt={2}> {message} </Typography>
+      {/* Grid cells */}
       <Box sx={{display: "flex", flexDirection: "column", alignContents: "center", justifyContent: "center", mt: 8}}>
         { grid.map((row, i) => {
               return (
@@ -116,6 +142,7 @@ function App() {
             )})
         }
       </Box>
+      {/* Legend */}
       <Stack direction="row" spacing={1} justifyContent="center" mt={4}>
         <Box display="flex" justifyContent="center" alignItems="center">
           <Node val={START} />
@@ -139,6 +166,12 @@ function App() {
           <Node val={PATH} />
           <Typography ml={1}> 
             Path Taken
+          </Typography>
+        </Box>
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <Node val={WEIGHT} />
+          <Typography ml={1}> 
+            Weighted Cell
           </Typography>
         </Box>
         <Box display="flex" justifyContent="center" alignItems="center">

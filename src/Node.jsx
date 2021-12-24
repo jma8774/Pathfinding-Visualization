@@ -3,18 +3,13 @@ import Box from '@mui/material/Box';
 import { keyframes } from '@mui/system';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
+import { UNVISITED, VISITED, PATH, START, END, WALL, WEIGHT } from './constants';
 
-const UNVISITED = 0
-const VISITED = 1
-const PATH = 2
-const START = 3
-const END = 4
-const WALL = 5
 
-const placeholder = keyframes`
+const def = keyframes`  
   from {
   }
-
   to {
   }
 `;
@@ -49,8 +44,19 @@ to {
 }
 `;
 
-const background = ["white", "#ABEBC6", "#85C1E9", "#FFBD33", "#FF5733", "#1C2833"]
-const animation = [placeholder, visited, path, placeholder, placeholder, walls]
+const weight = keyframes`
+0% {
+  transform: scale(0.3);
+}
+
+to {
+  transform: scale(1);
+}
+`;
+
+
+const background = ["white", "#ABEBC6", "#85C1E9", "#FFBD33", "#FF5733", "#1C2833", "#8E44AD"]
+const animation = [def, visited, path, def, def, walls, weight]
 
 const Node = (props) => {
   const {val} = props
@@ -67,6 +73,7 @@ const Node = (props) => {
     }}>
       { val === START && < PlayArrowIcon/>}
       { val === END && < CloseIcon/>}
+      { val === WEIGHT && <AddIcon/>}
     </Box>
   )
 }
