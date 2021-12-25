@@ -59,6 +59,23 @@ function App() {
     updateWeight(newEnd[0], newEnd[1], 1)
   }
 
+  const randomWeights = async () => {
+    clearPaths()
+    setWeight(prevState => {
+      const newWeight = [...prevState]
+      for(let i = 0; i < n; i++) {
+        for(let j = 0; j < m; j++) {
+          if(grid[i][j] !== START && grid[i][j] !== END && grid[i][j] !== WALL) {
+            const rand = getRandomInt(100)
+            newWeight[i][j] = rand < 5 ? 10 : 1
+            updateCell(i, j, rand < 5 ? WEIGHT : UNVISITED)
+          }
+        }
+      }
+      return newWeight
+    })
+  }
+
   // Clear visited and path nodes
   const clearPaths = () => {
     setGrid(prevState => {
@@ -116,6 +133,7 @@ function App() {
       return copy
     })
     await new Promise(r => setTimeout(r, 100));
+
     setGrid(prevState => {
       const copy = [...prevState]
       for(let i = 0; i < n; i++) {
@@ -213,10 +231,11 @@ function App() {
         {/* <Button variant="contained" color="secondary" disabled={running} onClick={() => console.log("Create Weighted Cell")}> Create Weight (WIP) </Button> */}
         <Grid item xs={12} display="flex" justifyContent="center">
           <ButtonGroup variant="outlined" orientation={window.innerWidth<800 ? "vertical" : "horizontal"}>
-            <Button variant="outlined" disabled={running} onClick={resetGrid}> Reset </Button>
+            <Button variant="outlined" disabled={running} onClick={resetGrid}> Clear All </Button>
             <Button variant="outlined" disabled={running} onClick={clearPaths}> Clear Path </Button>
             <Button variant="outlined" disabled={running} onClick={randomStartEnd}> Random Start/End </Button>
             <Button variant="outlined" disabled={running} onClick={generateWalls}> Random Walls </Button>
+            <Button variant="outlined" disabled={running} onClick={randomWeights}> Random Weights </Button>
           </ButtonGroup>
         </Grid>
       </Grid>

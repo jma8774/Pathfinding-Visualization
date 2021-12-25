@@ -10,6 +10,8 @@ const messages = [
   "BFS guarantee that we will travel the shortest path in an unweighted graph",
   "DFS does not guarantee that we will travel the shortest path",
   "Bidirectional search will find the shortest path between 2 nodes in an unweighted graph",
+  "Dijkstra's algorithm will find the path with the shortest COST in a weighted graph otherwise it's just a BFS",
+  "A* just like Dijkstra, will find the path with the shortest COST in a weighted graph but faster by using a heuristic function to guide it",
 ]
 const SelectAlgo = (props) => {
   const {startAlgo, setMessage, running} = props
@@ -32,6 +34,8 @@ const SelectAlgo = (props) => {
           <MenuItem value={0}> BFS </MenuItem>
           <MenuItem value={1}> DFS </MenuItem>
           <MenuItem value={2}> Bidirectional </MenuItem>
+          <MenuItem value={3}> Dijkstra </MenuItem>
+          <MenuItem value={4}> A* </MenuItem>
         </Select>
       </FormControl>
       <Button onClick={() => startAlgo(algo)} variant="contained" size="large" disabled={running}> Start </Button>
