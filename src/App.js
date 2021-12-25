@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -27,45 +26,50 @@ function App() {
   const [start, setStart] = useState([getRandomInt(n), getRandomInt(m)])
   const [end, setEnd] = useState([getRandomInt(n), getRandomInt(m)])
   const [running, setRunning] = useState(false)
-  const [message, setMessage] = useState('Hi there, welcome to the pathfinding visualizer! If you need help, click on the question mark icon.')
+  const [message, setMessage] = useState('Hi there, welcome to the pathfinding visualizer! Press the question mark for instructions on how to add/delete grids.')
+  const [keyPressed, setKeyPressed] = useState('')
 
   const updateWeight = (i, j, val) => {
     setWeight(prevState => {
-      const copy = [...prevState]
-      copy[i][j] = val
-      return copy
+      const newWeight = [...prevState]
+      newWeight[i][j] = val
+      return newWeight
     })
   }
 
   const updateCell = (i, j, val) => {
     setGrid(prevState => {
-      const copy = [...prevState]
-      copy[i][j] = val
-      return copy
+      const newGrid = [...prevState]
+      newGrid[i][j] = val
+      return newGrid
     })
   }
   
   const randomStartEnd = () => {
     clearPaths()
-    updateCell(start[0], start[1], 0)
-    updateCell(end[0], end[1], 0)
+    updateCell(start[0], start[1], UNVISITED)
+    updateCell(end[0], end[1], UNVISITED)
     const newStart = [getRandomInt(n), getRandomInt(m)]
     const newEnd = [getRandomInt(n), getRandomInt(m)]
     setStart(newStart)
     setEnd(newEnd)
     updateCell(newStart[0], newStart[1], START)
     updateCell(newEnd[0], newEnd[1], END)
-    updateWeight(newStart[0], newStart[1], 0)
-    updateWeight(newEnd[0], newEnd[1], 0)
+    updateWeight(newStart[0], newStart[1], 1)
+    updateWeight(newEnd[0], newEnd[1], 1)
   }
 
+  // Clear visited and path nodes
   const clearPaths = () => {
     setGrid(prevState => {
       const copy = [...prevState]
       for(let i = 0; i < n; i++) {
         for(let j = 0; j < m; j++) {
-          if(copy[i][j] === VISITED || copy[i][j] === PATH) {
-            copy[i][j] = 0
+          if(weight[i][j] > 1) {
+            copy[i][j] = WEIGHT
+          }
+          else if(copy[i][j] === VISITED || copy[i][j] === PATH) {
+            copy[i][j] = UNVISITED
           }
         }
       }
@@ -73,14 +77,24 @@ function App() {
     })
   }
 
+  // Reset everything to default
   const resetGrid = () => {
     setGrid(prevState => {
       const copy = [...prevState]
       for(let i = 0; i < n; i++) {
         for(let j = 0; j < m; j++) {
           if(copy[i][j] !== START && copy[i][j] !== END) {
-            copy[i][j] = 0
+            copy[i][j] = UNVISITED
           }
+        }
+      }
+      return copy
+    })
+    setWeight(prevState => {
+      const copy = [...prevState]
+      for(let i = 0; i < n; i++) {
+        for(let j = 0; j < m; j++) {
+            copy[i][j] = 1
         }
       }
       return copy
@@ -88,13 +102,25 @@ function App() {
   }
 
   const generateWalls = async () => {
-    resetGrid()
+    clearPaths()
+    // Reset All Walls to 0 for animation
+    setGrid(prevState => {
+      const copy = [...prevState]
+      for(let i = 0; i < n; i++) {
+        for(let j = 0; j < m; j++) {
+          if(copy[i][j] === WALL) {
+            copy[i][j] = UNVISITED
+          }
+        }
+      }
+      return copy
+    })
     await new Promise(r => setTimeout(r, 100));
     setGrid(prevState => {
       const copy = [...prevState]
       for(let i = 0; i < n; i++) {
         for(let j = 0; j < m; j++) {
-          if(copy[i][j] !== START && copy[i][j] !== END && Math.random() < 0.2) {
+          if(copy[i][j] !== START && copy[i][j] !== END && copy[i][j] !== WEIGHT && Math.random() < 0.175) {
             copy[i][j] = WALL
           }
         }
@@ -121,25 +147,60 @@ function App() {
     }
   }
 
-  const stopAlgo = () => {
-    setRunning(false)
-    console.log("STOPPED")
+  const handleOnClick = (e, i, j) => {
+    if(running)
+      return
+    updateWeight(i, j, 1)
+    if(keyPressed === 'q') {
+      if(grid[i][j] === END) return
+      updateCell(start[0], start[1], UNVISITED)
+      setStart([i, j])
+      updateCell(i, j, START)
+    } else if(keyPressed === 'w') {
+      if(grid[i][j] === START) return
+      updateCell(end[0], end[1], UNVISITED)
+      setEnd([i, j])
+      updateCell(i, j, END)
+    } else if(grid[i][j] === START || grid[i][j] === END){
+      return
+    } else if(keyPressed === 'Shift') {
+      updateCell(i, j, UNVISITED)
+    } else if(keyPressed === 'a') {
+      updateCell(i, j, WEIGHT)
+      updateWeight(i, j, 10)
+    } else {
+      updateCell(i, j, WALL)
+    }
+  }
+
+  const handleKeyDown = (e) => {
+    setKeyPressed(e.key)
+  }
+
+  const handleKeyUp = (e) => {
+    setKeyPressed('')
   }
 
   useEffect(() => {
     randomStartEnd()
     if(window.innerWidth < 800) {
-      alert("Website is not compatible on mobile devices, you may experience bugs. For the full experience, please visit the website on a desktop or laptop.")
+      alert("Website is not fully compatible on mobile devices, you may experience bugs and missing features. For the full experience, please visit the website on a desktop or a laptop.")
     }
-  }, [])
-  
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    }
+  }, []);
+
   return (
     <Box>
       <Typography variant="h4" sx={{textAlign: "center", mt: 6}}> Pathfinding Algorithm Visualization </Typography>
       <Grid container justifyContent="center" spacing={1.5} mt={1}>
         <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">
           <Box mr={1}>
-            <SelectAlgo startAlgo={startAlgo} stopAlgo={stopAlgo} setMessage={setMessage} running={running} />
+            <SelectAlgo startAlgo={startAlgo} setMessage={setMessage} running={running} />
           </Box>
           <Box>
             <Tooltip title={<HelpBox/>}>
@@ -150,9 +211,10 @@ function App() {
           </Box>
         </Grid>
         {/* <Button variant="contained" color="secondary" disabled={running} onClick={() => console.log("Create Weighted Cell")}> Create Weight (WIP) </Button> */}
-        <Grid item xs={12} md={4} display="flex" justifyContent="center">
+        <Grid item xs={12} display="flex" justifyContent="center">
           <ButtonGroup variant="outlined" orientation={window.innerWidth<800 ? "vertical" : "horizontal"}>
             <Button variant="outlined" disabled={running} onClick={resetGrid}> Reset </Button>
+            <Button variant="outlined" disabled={running} onClick={clearPaths}> Clear Path </Button>
             <Button variant="outlined" disabled={running} onClick={randomStartEnd}> Random Start/End </Button>
             <Button variant="outlined" disabled={running} onClick={generateWalls}> Random Walls </Button>
           </ButtonGroup>
@@ -165,7 +227,7 @@ function App() {
               return (
               <Box key={`row${i}`} sx={{display: "flex", justifyContent: "center"}}>
                 { row.map((val, j) =>
-                    <Node key={`col${j}`} val={val} i={i} j={j} weight={weight}></Node>
+                    <Node key={`col${j}`} val={val} i={i} j={j} weight={weight} handleOnClick={handleOnClick}></Node>
                   )
                 }
               </Box>

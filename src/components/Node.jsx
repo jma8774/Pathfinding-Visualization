@@ -14,12 +14,18 @@ const def = keyframes`
   }
 `;
 
+const startEnd = keyframes`  
+0% {
+  transform: scale(0.6);
+}
+100% {
+  transform: scale(1);
+}
+`;
+
 const visited = keyframes`
   0% {
     transform: scale(0.2);
-  }
-  75% {
-    transform: scale(1.1);
   }
   100% {
     transform: scale(1);
@@ -60,12 +66,13 @@ to {
 
 
 const background = ["white", "#ABEBC6", "#85C1E9", "#FFBD33", "#FF5733", "#1C2833", "#8E44AD"]
-const animation = [def, visited, path, def, def, walls, weighted]
+const animation = [def, visited, path, startEnd, startEnd, walls, weighted]
 
 const Node = (props) => {
-  const {val, i, j, weight} = props
+  const {val, i, j, weight, handleOnClick} = props
+
   return (
-    <Box sx={{
+    <Box onClick={(e) => handleOnClick &&   handleOnClick(e, i, j)} draggable={false} sx={{
       display: "flex", 
       justifyContent: "center",
       alignItems: "center",
@@ -73,7 +80,7 @@ const Node = (props) => {
       height: 30, 
       border: "1px solid rgb(175, 216, 248)",
       animation: `${animation[val]} 0.5s 1 ease-out`,
-      backgroundColor: background[val]
+      backgroundColor: background[val],
     }}>
       { val === START && < PlayArrowIcon/>}
       { val === END && < CloseIcon/>}

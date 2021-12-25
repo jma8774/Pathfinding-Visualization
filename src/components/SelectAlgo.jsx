@@ -12,7 +12,7 @@ const messages = [
   "Bidirectional search will find the shortest path between 2 nodes in an unweighted graph",
 ]
 const SelectAlgo = (props) => {
-  const {startAlgo, stopAlgo, setMessage, running} = props
+  const {startAlgo, setMessage, running} = props
   const [algo, setAlgo] = React.useState(0);
 
   const handleChange = (event) => {
