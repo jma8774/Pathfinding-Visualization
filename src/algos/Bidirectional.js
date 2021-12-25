@@ -1,8 +1,6 @@
-import { UNVISITED, VISITED, PATH, START, END, WALL, WEIGHT } from '../constants';
+import { n, m, WALL } from '../constants';
 
 async function bidirectional(grid, updateCell, start, end, stopRun) {
-  const n = grid.length
-  const m = grid[0].length
   let copy = JSON.parse(JSON.stringify(grid))
   // Initialize both visited
   let startVisited = Array(n).fill(0).map(() => new Array(m).fill(false))

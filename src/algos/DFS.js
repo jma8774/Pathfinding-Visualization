@@ -1,11 +1,9 @@
-import { UNVISITED, VISITED, PATH, START, END, WALL, WEIGHT } from '../constants';
+import { n, m, END, WALL } from '../constants';
 
 let found = false
 
 async function dfs(grid, updateCell, i, j, stopRun) {
   found = false
-  const n = grid.length
-  const m = grid[0].length
   let copy = JSON.parse(JSON.stringify(grid))
   let visited = Array(n).fill(0).map(() => new Array(m).fill(false))
   visited[i][j] = true

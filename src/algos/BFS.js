@@ -1,13 +1,6 @@
-const UNVISITED = 0
-const VISITED = 1
-const PATH = 2
-const START = 3
-const END = 4
-const WALL = 5
+import { n, m, END, WALL } from '../constants';
 
 async function bfs(grid, updateCell, i, j, stopRun) {
-  const n = grid.length
-  const m = grid[0].length
   let copy = JSON.parse(JSON.stringify(grid))
   let visited = Array(n).fill(0).map(() => new Array(m).fill(false))
   visited[i][j] = true

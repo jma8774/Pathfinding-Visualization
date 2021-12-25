@@ -2,9 +2,8 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
-import { UNVISITED, VISITED, PATH, START, END, WALL, WEIGHT } from '../constants';
-import Node from '../Node'
+import { START, END, WALL, WEIGHT } from '../constants';
+import Node from './Node'
 
 const HelpBox = () => {
   return (
