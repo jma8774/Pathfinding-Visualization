@@ -64,7 +64,7 @@ async function dijkstra(grid, weight, updateCell, i, j, stopRun) {
         if(newCost < dist[r][c].cost) {
           // Found new short path, set the parent of the neighbor node to this one
           parent[r][c] = [row, col]
-            dist[r][c].cost = newCost
+          dist[r][c].cost = newCost
           add(pq, dist[r][c])
         }
       }

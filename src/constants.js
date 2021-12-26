@@ -1,5 +1,5 @@
 const n = 20
-const m = parseInt(window.innerWidth/35) // 45
+const m = Math.min(parseInt(window.innerWidth/35), 55) // 45
 
 const UNVISITED = 0
 const VISITED = 1

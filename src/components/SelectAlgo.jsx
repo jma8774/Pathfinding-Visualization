@@ -11,7 +11,7 @@ const messages = [
   "DFS does not guarantee that we will travel the shortest path",
   "Bidirectional search will find the shortest path between 2 nodes in an unweighted graph",
   "Dijkstra's algorithm will find the path with the shortest COST in a weighted graph otherwise it's just a BFS (try blocking near the end point with purple cells)",
-  "A* just like Dijkstra, will find the path with the shortest COST in a weighted graph but faster by using a heuristic function to guide it",
+  "A* just like Dijkstra, is a weighted search and is one of the fastest ones by making use of a heuristic function to guide it",
 ]
 const SelectAlgo = (props) => {
   const {startAlgo, setMessage, running} = props

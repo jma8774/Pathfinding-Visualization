@@ -16,6 +16,7 @@ import bfs from './algos/BFS'
 import dfs from './algos/DFS'
 import bidirectional from './algos/Bidirectional'
 import dijkstra from './algos/Dijkstra'
+import astar from './algos/Astar'
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -204,6 +205,9 @@ function App() {
         break;
       case 3:
         dijkstra(grid, weight, updateCell, start[0], start[1], () => setRunning(false))
+        break;
+      case 4:
+        astar(grid, weight, updateCell, start, end, () => setRunning(false))
         break;
       default:
         console.log("Invalid switch case")
