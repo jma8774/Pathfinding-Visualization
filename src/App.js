@@ -268,7 +268,7 @@ function App() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{textAlign: "center", mt: 3}}> Pathfinding Algorithm Visualization </Typography>
+      <Typography variant="h4" sx={{textAlign: "center", mt: 2}}> Pathfinding Algorithm Visualization </Typography>
       <Grid container justifyContent="center" spacing={1.5} mt={1}>
         <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">
           <Box mr={1}>
@@ -296,12 +296,12 @@ function App() {
       </Grid>
       <Typography variant="body1" textAlign="center" mt={2}> {message} </Typography>
       {/* Grid cells */}
-      <FormControlLabel control={<Switch checked={fast} disabled={running} onChange={(e) => setFast(e.target.checked)} />} label="Fast Mode" sx={{
+      {/* <FormControlLabel control={<Switch checked={fast} disabled={running} onChange={(e) => setFast(e.target.checked)} />} label="Fast Mode" sx={{
         display: "flex",
         justifyContent: "center",
         mt: 1,
-      }}/>
-      <Box sx={{display: "flex", flexDirection: "column", alignContents: "center", justifyContent: "center", mt: 3}}>
+      }}/> */}
+      <Box sx={{display: "flex", flexDirection: "column", alignContents: "center", justifyContent: "center", mt: 4}}>
         { grid.map((row, i) => {
               return (
               <Box key={`row${i}`} sx={{display: "flex", justifyContent: "center"}}>

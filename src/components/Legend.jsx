@@ -6,7 +6,7 @@ import Node from './Node'
 
 const Legend = () => {
   return (
-    <Grid container spacing={1} justifyContent="center" mt={4} mb={2}>
+    <Grid container spacing={1} justifyContent="center" mt={2.5} mb={2}>
 
       <Grid item>
         <Box display="flex" justifyContent="center" alignItems="center">

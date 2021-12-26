@@ -31,7 +31,7 @@ async function bfs(grid, updateCell, i, j, stopRun, fast) {
         visited[r][c] = true
         copy[r][c] = 1
         updateCell(r, c, 1)
-        if(!fast) await new Promise(r => setTimeout(r, 10));
+        if(!fast) await new Promise(r => setTimeout(r, 10))
       }
     }
   }
