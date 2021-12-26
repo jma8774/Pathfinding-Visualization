@@ -15,6 +15,7 @@ import Legend from './components/Legend'
 import bfs from './algos/BFS'
 import dfs from './algos/DFS'
 import bidirectional from './algos/Bidirectional'
+import dijkstra from './algos/Dijkstra'
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -23,8 +24,8 @@ function getRandomInt(max) {
 function App() {
   const [grid, setGrid] = useState(Array(n).fill(UNVISITED).map(() => new Array(m).fill(UNVISITED)))
   const [weight, setWeight] = useState(Array(n).fill(1).map(() => new Array(m).fill(1)))
-  const [start, setStart] = useState([getRandomInt(n), getRandomInt(m)])
-  const [end, setEnd] = useState([getRandomInt(n), getRandomInt(m)])
+  const [start, setStart] = useState([parseInt(n/2), parseInt(m/3)])
+  const [end, setEnd] = useState([parseInt(n/2), parseInt(m/(1.5))])
   const [running, setRunning] = useState(false)
   const [message, setMessage] = useState('Hi there, welcome to the pathfinding visualizer! Press the question mark for instructions on how to add/delete grids.')
   const [keyPressed, setKeyPressed] = useState('')
@@ -44,19 +45,28 @@ function App() {
       return newGrid
     })
   }
-  
+  const updateStart = (i, j) => {
+    updateCell(start[0], start[1], UNVISITED)
+    updateWeight(start[0], start[1], 1)
+    const newStart = [i, j]
+    setStart(newStart)
+    updateCell(newStart[0], newStart[1], START)
+    updateWeight(newStart[0], newStart[1], 1)
+  }
+
+  const updateEnd = (i, j) => {
+    updateCell(end[0], end[1], UNVISITED)
+    updateWeight(end[0], end[1], 1)
+    const newEnd = [i, j]
+    setEnd(newEnd)
+    updateCell(newEnd[0], newEnd[1], END)
+    updateWeight(newEnd[0], newEnd[1], 1)
+  }
+
   const randomStartEnd = () => {
     clearPaths()
-    updateCell(start[0], start[1], UNVISITED)
-    updateCell(end[0], end[1], UNVISITED)
-    const newStart = [getRandomInt(n), getRandomInt(m)]
-    const newEnd = [getRandomInt(n), getRandomInt(m)]
-    setStart(newStart)
-    setEnd(newEnd)
-    updateCell(newStart[0], newStart[1], START)
-    updateCell(newEnd[0], newEnd[1], END)
-    updateWeight(newStart[0], newStart[1], 1)
-    updateWeight(newEnd[0], newEnd[1], 1)
+    updateStart(getRandomInt(n), getRandomInt(m))
+    updateEnd(getRandomInt(n), getRandomInt(m))
   }
 
   const randomWeights = async () => {
@@ -67,7 +77,7 @@ function App() {
         for(let j = 0; j < m; j++) {
           if(grid[i][j] !== START && grid[i][j] !== END && grid[i][j] !== WALL) {
             const rand = getRandomInt(100)
-            newWeight[i][j] = rand < 5 ? 10 : 1
+            newWeight[i][j] = rand < 5 ? 5 : 1
             updateCell(i, j, rand < 5 ? WEIGHT : UNVISITED)
           }
         }
@@ -147,6 +157,38 @@ function App() {
     })
   }
 
+  // Fixed Setup Yikes
+  const dijkstraExample = () => {
+    resetGrid()
+
+    const start = parseInt(m/3)
+    const end = parseInt(m/2)
+    
+    for(let i = 0; i < m; i ++) {
+      updateCell(0, i, WALL)
+      updateCell(n-1, i, WALL)
+    }
+    for(let i = 0; i < n; i ++) {
+      updateCell(i, 0, WALL)
+      updateCell(i, m-1, WALL)
+    }
+    for(let i = 1; i < n-6; i ++) {
+      updateCell(i, end-2, WEIGHT)
+      updateCell(i, end-1, WEIGHT)
+      updateWeight(i, end-2, 5)
+      updateWeight(i, end-1, 5)
+    }
+    for(let i = n-4; i < n-1; i ++) {
+      updateCell(i, end-2, WEIGHT)
+      updateCell(i, end-1, WEIGHT)
+      updateWeight(i, end-2, 5)
+      updateWeight(i, end-1, 5)
+    }
+    
+    updateStart(parseInt(n/2)-1, start)
+    updateEnd(parseInt(n/2)-1, end)
+  }
+
   const startAlgo = (algo) => {
     setRunning(true)
     clearPaths()
@@ -160,6 +202,9 @@ function App() {
       case 2:
         bidirectional(grid, updateCell, start, end, () => setRunning(false))
         break;
+      case 3:
+        dijkstra(grid, weight, updateCell, start[0], start[1], () => setRunning(false))
+        break;
       default:
         console.log("Invalid switch case")
     }
@@ -171,21 +216,17 @@ function App() {
     updateWeight(i, j, 1)
     if(keyPressed === 'q') {
       if(grid[i][j] === END) return
-      updateCell(start[0], start[1], UNVISITED)
-      setStart([i, j])
-      updateCell(i, j, START)
+      updateStart(i, j)
     } else if(keyPressed === 'w') {
       if(grid[i][j] === START) return
-      updateCell(end[0], end[1], UNVISITED)
-      setEnd([i, j])
-      updateCell(i, j, END)
+      updateEnd(i, j)
     } else if(grid[i][j] === START || grid[i][j] === END){
       return
     } else if(keyPressed === 'Shift') {
       updateCell(i, j, UNVISITED)
     } else if(keyPressed === 'a') {
       updateCell(i, j, WEIGHT)
-      updateWeight(i, j, 10)
+      updateWeight(i, j, 5)
     } else {
       updateCell(i, j, WALL)
     }
@@ -200,7 +241,8 @@ function App() {
   }
 
   useEffect(() => {
-    randomStartEnd()
+    updateStart(parseInt(n/2)-1, parseInt(m/3))
+    updateEnd(parseInt(n/2)-1, parseInt(m/(1.5)))
     if(window.innerWidth < 800) {
       alert("Website is not fully compatible on mobile devices, you may experience bugs and missing features. For the full experience, please visit the website on a desktop or a laptop.")
     }
@@ -236,6 +278,7 @@ function App() {
             <Button variant="outlined" disabled={running} onClick={randomStartEnd}> Random Start/End </Button>
             <Button variant="outlined" disabled={running} onClick={generateWalls}> Random Walls </Button>
             <Button variant="outlined" disabled={running} onClick={randomWeights}> Random Weights </Button>
+            <Button variant="contained" color="secondary" disabled={running} onClick={dijkstraExample}> Dijkstra Example </Button>
           </ButtonGroup>
         </Grid>
       </Grid>

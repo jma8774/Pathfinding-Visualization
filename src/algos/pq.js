@@ -8,7 +8,7 @@ function init(arr) {
 
 // Add entry to priority queue and heapify
 function add(arr, entry) {
-  console.log("ADDED", entry)
+  // console.log("ADDED", entry)
   arr.push(entry)
   // Heapify up
   heapUp(arr, arr.length-1)
@@ -17,7 +17,7 @@ function add(arr, entry) {
 // Remove min cost in priority queue and heapify
 function pop(arr) {
   const n = arr.length
-  if(n == 0) {
+  if(n === 0) {
     console.log("Empty PQ")
     return
   }
@@ -26,7 +26,7 @@ function pop(arr) {
   const ans = arr.pop()
   // Heapify down
   heapDown(arr, 0)
-  console.log("POPPED", ans)
+  // console.log("POPPED", ans)
   return ans
 }
 
@@ -40,10 +40,10 @@ function heapDown(arr, i) {
   const left = i*2 + 1
   const right = i*2 + 2
   // Compare with left and right and find the new min
-  if(left < n && arr[left][0] <= arr[min][0]) {
+  if(left < n && arr[left].cost <= arr[min].cost) {
     min = left
   }
-  if(right < n && arr[right][0] <= arr[min][0]) {
+  if(right < n && arr[right].cost <= arr[min].cost) {
     min = right
   }
 
@@ -60,7 +60,7 @@ function heapUp(arr, i) {
   const n = arr.length
 
   const parent = parseInt((i-1)/2)
-  if(i < n && arr[i][0] < arr[parent][0]) {
+  if(i < n && arr[i].cost < arr[parent].cost) {
     swap(arr, i, parent)
     heapUp(arr, parent)
   }
@@ -74,39 +74,39 @@ function swap(arr, i, j) {
 
 
 // TESTING
-let arr = [
-  [5, [1, 2]],
-  [1, [2, 4]],
-  [155, [6, 2]],
-  [-1, [1, 2]],
-  [8, [1, 4]],
-  [2, [4, 2]],
-]
+// let arr = [
+//   [5, [1, 2]],
+//   [1, [2, 4]],
+//   [155, [6, 2]],
+//   [-1, [1, 2]],
+//   [8, [1, 4]],
+//   [2, [4, 2]],
+// ]
 
-console.log("PRE", arr)
-init(arr)
-console.log("POST", arr)
+// console.log("PRE", arr)
+// init(arr)
+// console.log("POST", arr)
 
-pop(arr)
-pop(arr)
-pop(arr)
-pop(arr)
-pop(arr)
-add(arr, [1000, [8, 8]])
-pop(arr)
-add(arr, [0, [123, 123]])
-pop(arr)
-pop(arr)
-pop(arr)
-pop(arr)
-pop(arr)
-pop(arr)
-pop(arr)
-pop(arr)
-pop(arr)
-pop(arr)
-pop(arr)
-pop(arr)
+// pop(arr)
+// pop(arr)
+// pop(arr)
+// pop(arr)
+// pop(arr)
+// add(arr, [1000, [8, 8]])
+// pop(arr)
+// add(arr, [0, [123, 123]])
+// pop(arr)
+// pop(arr)
+// pop(arr)
+// pop(arr)
+// pop(arr)
+// pop(arr)
+// pop(arr)
+// pop(arr)
+// pop(arr)
+// pop(arr)
+// pop(arr)
+// pop(arr)
 
 export { init, add, pop };
 

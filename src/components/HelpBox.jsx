@@ -20,7 +20,7 @@ const HelpBox = () => {
       <Stack direction="row" spacing={1} justifyContent="center" alignItems="center" mt={1}>
         <Node val={WEIGHT}/> 
       </Stack>
-      <Typography variant="subtitle1"> <b>Click</b> and hold the <b>A</b> key to create weighted cells or hold the <b>SHIFT</b> key to delete (weight cost is 10) </Typography>
+      <Typography variant="subtitle1"> <b>Click</b> and hold the <b>A</b> key to create weighted cells or hold the <b>SHIFT</b> key to delete (weight cost is 5) </Typography>
     </Box>
   )
 }
