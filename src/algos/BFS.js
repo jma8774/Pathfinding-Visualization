@@ -1,6 +1,6 @@
 import { n, m, END, WALL } from '../constants';
 
-async function bfs(grid, updateCell, i, j, stopRun) {
+async function bfs(grid, updateCell, i, j, stopRun, fast) {
   let copy = JSON.parse(JSON.stringify(grid))
   let visited = Array(n).fill(0).map(() => new Array(m).fill(false))
   visited[i][j] = true
@@ -31,7 +31,7 @@ async function bfs(grid, updateCell, i, j, stopRun) {
         visited[r][c] = true
         copy[r][c] = 1
         updateCell(r, c, 1)
-        await new Promise(r => setTimeout(r, 10));
+        if(!fast) await new Promise(r => setTimeout(r, 10));
       }
     }
   }

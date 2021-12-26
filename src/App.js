@@ -7,6 +7,8 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import HelpIcon from '@mui/icons-material/Help';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { n, m, UNVISITED, VISITED, PATH, START, END, WALL, WEIGHT } from './constants';
 import Node from './components/Node'
 import HelpBox from './components/HelpBox'
@@ -27,6 +29,7 @@ function App() {
   const [weight, setWeight] = useState(Array(n).fill(1).map(() => new Array(m).fill(1)))
   const [start, setStart] = useState([parseInt(n/2), parseInt(m/3)])
   const [end, setEnd] = useState([parseInt(n/2), parseInt(m/(1.5))])
+  const [fast, setFast] = useState(false)
   const [running, setRunning] = useState(false)
   const [message, setMessage] = useState('Hi there, welcome to the pathfinding visualizer! Press the question mark for instructions on how to add/delete grids.')
   const [keyPressed, setKeyPressed] = useState('')
@@ -40,12 +43,17 @@ function App() {
   }
 
   const updateCell = (i, j, val) => {
+    if(i < 0 || i > n-1 || j < 0 || j > m-1) {
+      console.log("BAD UPDATE CELL", i, j, val)
+      return
+    }
     setGrid(prevState => {
       const newGrid = [...prevState]
       newGrid[i][j] = val
       return newGrid
     })
   }
+
   const updateStart = (i, j) => {
     updateCell(start[0], start[1], UNVISITED)
     updateWeight(start[0], start[1], 1)
@@ -195,19 +203,19 @@ function App() {
     clearPaths()
     switch(algo) {
       case 0:
-        bfs(grid, updateCell, start[0], start[1], () => setRunning(false))
+        bfs(grid, updateCell, start[0], start[1], () => setRunning(false), fast)
         break;
       case 1:
-        dfs(grid, updateCell, start[0], start[1], () => setRunning(false))
+        dfs(grid, updateCell, start[0], start[1], () => setRunning(false), fast)
         break;
       case 2:
-        bidirectional(grid, updateCell, start, end, () => setRunning(false))
+        bidirectional(grid, updateCell, start, end, () => setRunning(false), fast)
         break;
       case 3:
-        dijkstra(grid, weight, updateCell, start[0], start[1], () => setRunning(false))
+        dijkstra(grid, weight, updateCell, start[0], start[1], () => setRunning(false), fast)
         break;
       case 4:
-        astar(grid, weight, updateCell, start, end, () => setRunning(false))
+        astar(grid, weight, updateCell, start, end, () => setRunning(false), fast)
         break;
       default:
         console.log("Invalid switch case")
@@ -260,7 +268,7 @@ function App() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{textAlign: "center", mt: 6}}> Pathfinding Algorithm Visualization </Typography>
+      <Typography variant="h4" sx={{textAlign: "center", mt: 3}}> Pathfinding Algorithm Visualization </Typography>
       <Grid container justifyContent="center" spacing={1.5} mt={1}>
         <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">
           <Box mr={1}>
@@ -288,7 +296,12 @@ function App() {
       </Grid>
       <Typography variant="body1" textAlign="center" mt={2}> {message} </Typography>
       {/* Grid cells */}
-      <Box sx={{display: "flex", flexDirection: "column", alignContents: "center", justifyContent: "center", mt: 4}}>
+      <FormControlLabel control={<Switch checked={fast} disabled={running} onChange={(e) => setFast(e.target.checked)} />} label="Fast Mode" sx={{
+        display: "flex",
+        justifyContent: "center",
+        mt: 1,
+      }}/>
+      <Box sx={{display: "flex", flexDirection: "column", alignContents: "center", justifyContent: "center", mt: 3}}>
         { grid.map((row, i) => {
               return (
               <Box key={`row${i}`} sx={{display: "flex", justifyContent: "center"}}>

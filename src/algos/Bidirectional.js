@@ -1,6 +1,6 @@
 import { n, m, WALL } from '../constants';
 
-async function bidirectional(grid, updateCell, start, end, stopRun) {
+async function bidirectional(grid, updateCell, start, end, stopRun, fast) {
   let copy = JSON.parse(JSON.stringify(grid))
   // Initialize both visited
   let startVisited = Array(n).fill(0).map(() => new Array(m).fill(false))
@@ -57,7 +57,7 @@ async function bidirectional(grid, updateCell, start, end, stopRun) {
       stopRun()
       return true
     }
-    await new Promise(r => setTimeout(r, 10));
+    if(!fast) await new Promise(r => setTimeout(r, 10));
   }
   stopRun()
 }

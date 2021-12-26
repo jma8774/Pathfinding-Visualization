@@ -16,10 +16,10 @@ Thus, we are making an educated guess on which node which has the lowest cost + 
 function predict(current, end) {
   const y = Math.abs(end[0]-current[0])
   const x = Math.abs(end[1]-current[1])
-  return Math.pow(x, 2) + Math.pow(y, 2)
+  return x + y
 }
 
-async function astar(grid, weight, updateCell, start, end, stopRun) {
+async function astar(grid, weight, updateCell, start, end, stopRun, fast) {
   const [startRow, startCol] = start
   // deep copy of our state grid
   let gridCopy = JSON.parse(JSON.stringify(grid))
@@ -75,7 +75,7 @@ async function astar(grid, weight, updateCell, start, end, stopRun) {
     // Update cell state to VISITED
     if(gridCopy[row][col] !== START)
       updateCell(row, col, 1)
-    await new Promise(r => setTimeout(r, 10));
+    if(!fast) await new Promise(r => setTimeout(r, 10));
     visited[row][col] = true
 
     const directions = [[row-1, col], [row, col-1], [row, col+1], [row+1, col]]
