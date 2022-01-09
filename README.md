@@ -1,6 +1,6 @@
 # Pathfinding Visualization
 
-Go ahead and try out the website and the various pathfinding algorithms. For someone like me who struggled with visualizing what each algorithm did in my head, this website would've helped greatly. Hope you enjoy!
+For those that stumble upon this, I created this website because I struggled with visualizing what each algorithm did in my head. And if struggle like me, then perhaps this can help you a little bit. Hope you enjoy!
 
 # Algorithms
 
