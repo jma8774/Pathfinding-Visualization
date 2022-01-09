@@ -70,6 +70,7 @@ const animation = [def, visited, path, startEnd, startEnd, walls, weighted]
 
 const Node = (props) => {
   const {val, i, j, weight, handleOnClick} = props
+  // console.log("Node Rerender")
 
   return (
     <Box onClick={(e) => handleOnClick &&   handleOnClick(e, i, j)} draggable={false} sx={{
@@ -84,9 +85,9 @@ const Node = (props) => {
     }}>
       { val === START && < PlayArrowIcon/>}
       { val === END && < CloseIcon/>}
-      { (val !== WALL) && (val === WEIGHT || (weight && weight[i][j] > 1)) && <AddIcon/>}
+      { (val !== WALL) && (val === WEIGHT || (weight > 1)) && <AddIcon/>}
     </Box>
   )
 }
 
-export default Node
+export default React.memo(Node)

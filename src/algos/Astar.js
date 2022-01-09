@@ -19,7 +19,7 @@ function predict(current, end) {
   return x + y
 }
 
-async function astar(grid, weight, updateCell, start, end, stopRun, fast) {
+async function astar(grid, weight, updateCell, start, end, stopRun, speed) {
   const [startRow, startCol] = start
   // deep copy of our state grid
   let gridCopy = JSON.parse(JSON.stringify(grid))
@@ -75,7 +75,7 @@ async function astar(grid, weight, updateCell, start, end, stopRun, fast) {
     // Update cell state to VISITED
     if(gridCopy[row][col] !== START)
       updateCell(row, col, 1)
-    if(!fast) await new Promise(r => setTimeout(r, 10));
+    await new Promise(r => setTimeout(r, speed));
     visited[row][col] = true
 
     const directions = [[row-1, col], [row, col-1], [row, col+1], [row+1, col]]

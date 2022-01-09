@@ -2,7 +2,7 @@ import { n, m, END, WALL } from '../constants';
 
 let found = false
 
-async function dfs(grid, updateCell, i, j, stopRun, fast) {
+async function dfs(grid, updateCell, i, j, stopRun, speed) {
   found = false
   let copy = JSON.parse(JSON.stringify(grid))
   let visited = Array(n).fill(0).map(() => new Array(m).fill(false))
@@ -10,7 +10,7 @@ async function dfs(grid, updateCell, i, j, stopRun, fast) {
   let path = []
 
   // Perform DFS
-  await dfsHelper(copy, updateCell, visited, path, i, j, fast)
+  await dfsHelper(copy, updateCell, visited, path, i, j, speed)
 
   for(const [pathRow, pathCol] of path) {
     updateCell(pathRow, pathCol, 2)
@@ -19,8 +19,8 @@ async function dfs(grid, updateCell, i, j, stopRun, fast) {
   stopRun()
 }
 
-async function dfsHelper(grid, updateCell, visited, path, row, col, fast) {
-  if(!fast) await new Promise(r => setTimeout(r, 10));
+async function dfsHelper(grid, updateCell, visited, path, row, col, speed) {
+  await new Promise(r => setTimeout(r, speed));
 
   // Found end cell
   if(grid[row][col] === END) {
@@ -37,7 +37,7 @@ async function dfsHelper(grid, updateCell, visited, path, row, col, fast) {
       path.push([i, j])
       if(grid[i][j] !== END)
         updateCell(i, j, 1)
-      await dfsHelper(grid, updateCell, visited, path, i, j, fast)
+      await dfsHelper(grid, updateCell, visited, path, i, j, speed)
       // If path has been found, stop all operations
       if(found) 
         return 

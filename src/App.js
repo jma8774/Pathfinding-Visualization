@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef} from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -7,18 +7,18 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import HelpIcon from '@mui/icons-material/Help';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import { n, m, UNVISITED, VISITED, PATH, START, END, WALL, WEIGHT } from './constants';
 import Node from './components/Node'
 import HelpBox from './components/HelpBox'
 import SelectAlgo from './components/SelectAlgo'
 import Legend from './components/Legend'
+import Slider from '@mui/material/Slider';
 import bfs from './algos/BFS'
 import dfs from './algos/DFS'
 import bidirectional from './algos/Bidirectional'
 import dijkstra from './algos/Dijkstra'
 import astar from './algos/Astar'
+
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -29,10 +29,11 @@ function App() {
   const [weight, setWeight] = useState(Array(n).fill(1).map(() => new Array(m).fill(1)))
   const [start, setStart] = useState([parseInt(n/2), parseInt(m/3)])
   const [end, setEnd] = useState([parseInt(n/2), parseInt(m/(1.5))])
-  const [fast, setFast] = useState(false)
   const [running, setRunning] = useState(false)
+  const [speed, setSpeed] = React.useState(5);
   const [message, setMessage] = useState('Hi there, welcome to the pathfinding visualizer! Press the question mark for instructions on how to add/delete grids.')
   const [keyPressed, setKeyPressed] = useState('')
+  const runningRef = useRef(running)
 
   const updateWeight = (i, j, val) => {
     setWeight(prevState => {
@@ -203,29 +204,29 @@ function App() {
     clearPaths()
     switch(algo) {
       case 0:
-        bfs(grid, updateCell, start[0], start[1], () => setRunning(false), fast)
+        bfs(grid, updateCell, start[0], start[1], () => setRunning(false), speed)
         break;
       case 1:
-        dfs(grid, updateCell, start[0], start[1], () => setRunning(false), fast)
+        dfs(grid, updateCell, start[0], start[1], () => setRunning(false), speed)
         break;
       case 2:
-        bidirectional(grid, updateCell, start, end, () => setRunning(false), fast)
+        bidirectional(grid, updateCell, start, end, () => setRunning(false), speed)
         break;
       case 3:
-        dijkstra(grid, weight, updateCell, start[0], start[1], () => setRunning(false), fast)
+        dijkstra(grid, weight, updateCell, start[0], start[1], () => setRunning(false), speed)
         break;
       case 4:
-        astar(grid, weight, updateCell, start, end, () => setRunning(false), fast)
+        astar(grid, weight, updateCell, start, end, () => setRunning(false), speed)
         break;
       default:
         console.log("Invalid switch case")
     }
   }
 
-  const handleOnClick = (e, i, j) => {
+  const handleOnClick = useCallback( (e, i, j) => {
+    // console.log("Function rerender")
     if(running)
       return
-    updateWeight(i, j, 1)
     if(keyPressed === 'q') {
       if(grid[i][j] === END) return
       updateStart(i, j)
@@ -235,21 +236,29 @@ function App() {
     } else if(grid[i][j] === START || grid[i][j] === END){
       return
     } else if(keyPressed === 'Shift') {
+      updateWeight(i, j, 1)
       updateCell(i, j, UNVISITED)
     } else if(keyPressed === 'a') {
-      updateCell(i, j, WEIGHT)
       updateWeight(i, j, 5)
+      updateCell(i, j, WEIGHT)
     } else {
+      updateWeight(i, j, 1)
       updateCell(i, j, WALL)
     }
-  }
+  }, [start, end, running, keyPressed])
 
   const handleKeyDown = (e) => {
-    setKeyPressed(e.key)
+    if(runningRef.current)
+      return
+    if(e.key === 'q' || e.key === 'w' || e.key === 'Shift' || e.key === 'a')
+      setKeyPressed(e.key)
   }
 
   const handleKeyUp = (e) => {
-    setKeyPressed('')
+    if(runningRef.current)
+      return
+    if(e.key === 'q' || e.key === 'w' || e.key === 'Shift' || e.key === 'a')
+      setKeyPressed('')
   }
 
   useEffect(() => {
@@ -265,6 +274,10 @@ function App() {
       window.removeEventListener('keyup', handleKeyUp);
     }
   }, []);
+
+  useEffect(() => {
+    runningRef.current = running
+  }, [running]);
 
   return (
     <Box>
@@ -282,6 +295,14 @@ function App() {
             </Tooltip>
           </Box>
         </Grid>
+        <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">
+          <Typography variant="body1" sx={{mr: 2}}>
+            Animation Delay
+          </Typography>
+          <Box sx={{width: 200}} display="flex" justifyContent="center" alignItems="center">
+            <Slider aria-label="Speed" value={speed} onChange={(e, newSpeed) => {setSpeed(newSpeed)}} valueLabelDisplay="auto" step={0.5} min={0.5} max={50} disabled={running}/>
+          </Box>
+        </Grid>
         {/* <Button variant="contained" color="secondary" disabled={running} onClick={() => console.log("Create Weighted Cell")}> Create Weight (WIP) </Button> */}
         <Grid item xs={12} display="flex" justifyContent="center">
           <ButtonGroup variant="outlined" orientation={window.innerWidth<800 ? "vertical" : "horizontal"}>
@@ -296,17 +317,12 @@ function App() {
       </Grid>
       <Typography variant="body1" textAlign="center" mt={2}> {message} </Typography>
       {/* Grid cells */}
-      {/* <FormControlLabel control={<Switch checked={fast} disabled={running} onChange={(e) => setFast(e.target.checked)} />} label="Fast Mode" sx={{
-        display: "flex",
-        justifyContent: "center",
-        mt: 1,
-      }}/> */}
       <Box sx={{display: "flex", flexDirection: "column", alignContents: "center", justifyContent: "center", mt: 4}}>
         { grid.map((row, i) => {
               return (
               <Box key={`row${i}`} sx={{display: "flex", justifyContent: "center"}}>
                 { row.map((val, j) =>
-                    <Node key={`col${j}`} val={val} i={i} j={j} weight={weight} handleOnClick={handleOnClick}></Node>
+                    <Node key={`col${j}`} val={val} i={i} j={j} weight={weight[i][j]} handleOnClick={handleOnClick}></Node>
                   )
                 }
               </Box>
