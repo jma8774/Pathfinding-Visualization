@@ -1,5 +1,7 @@
 # Pathfinding Visualization
 
+![badge1](https://img.shields.io/github/issues/jma8774/Pathfinding-Visualization) ![badge2](https://img.shields.io/github/license/jma8774/Pathfinding-Visualization)
+
 For those that stumble upon this, I created this website because I struggled with visualizing what each algorithm did in my head. And if struggle like me, then perhaps this can help you a little bit. Hope you enjoy!
 
 # Algorithms
