@@ -73,7 +73,7 @@ const Node = (props) => {
   // console.log("Node Rerender")
 
   return (
-    <Box onClick={(e) => handleOnClick &&   handleOnClick(e, i, j)} draggable={false} sx={{
+    <Box onClick={(e) => handleOnClick &&  handleOnClick(e, i, j)} draggable={false} sx={{
       display: "flex", 
       justifyContent: "center",
       alignItems: "center",
