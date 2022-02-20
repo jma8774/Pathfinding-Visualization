@@ -4,6 +4,31 @@
 
 For those that stumble upon this, I created this website because I struggled with visualizing what each algorithm did in my head. And if struggle like me, then perhaps this can help you a little bit. Hope you enjoy!
 
+# Usage
+Install [Docker](http://docker.com) container to easily run this application locally.
+
+### Install
+
+Build the project from source:
+
+    git clone https://github.com/jma8774/Pathfinding-Visualization.git
+    cd Pathfinding-Visualization
+    docker build -t pathfinding .
+
+### Run
+
+Run the image and go to http://localhost:3000/ to see the app:
+
+    docker run -dp 3000:3000 pathfinding
+    
+### Stop
+
+To stop the container, you can use Docker Desktop or with the terminal:
+
+    docker ps
+    docker rm -f <container_id>
+
+
 # Algorithms
 
 * **Breadth-First Search:** A search algorithm that visits all nodes in the level before proceeding to the next level. It is unweighted and guarantees the shortest path.
