@@ -5,7 +5,7 @@
 For those that stumble upon this, I created this website because I struggled with visualizing what each algorithm did in my head. And if struggle like me, then perhaps this can help you a little bit. Hope you enjoy!
 
 # Usage
-It is hosted [here](https://www.jiamingma.me/Pathfinding-Visualization/) or Install [Docker](http://docker.com) container to easily run this application locally.
+It is hosted [here](https://www.jiamingma.me/Pathfinding-Visualization/) or install [Docker](http://docker.com) container to easily run this application locally.
 
 ### Install
 
