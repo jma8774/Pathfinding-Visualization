@@ -1,4 +1,4 @@
-name: Node.js CI Testing
+name: CI/CD
 
 on:
   push:
@@ -25,3 +25,12 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run test
+    - name: Deploy to GitHub Pages
+      uses: crazy-max/ghaction-github-pages@v2
+      with:
+        target_branch: gh-pages
+        build_dir: public
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+  
