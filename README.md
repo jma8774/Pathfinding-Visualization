@@ -23,7 +23,7 @@ Run the image and go to http://localhost:3000/ to see the app:
     
 ### Stop
 
-To stop the container, you can use Docker Desktop or with the terminal:
+To stop the container, you can use Docker Desktop or the terminal:
 
     docker ps
     docker rm -f <container_id>
