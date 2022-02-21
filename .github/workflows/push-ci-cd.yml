@@ -1,5 +1,5 @@
 # On push, this action will run tests and will deploy the new page if all the tests pass
-name: CI/CD Push
+name: CI/CD
 
 on:
   push:
