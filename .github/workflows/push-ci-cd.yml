@@ -18,6 +18,8 @@ jobs:
       - run: npm ci
       - run: npm run test
       - run: npm run build
+        env:
+          CI: false
       - name: Deploy GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
