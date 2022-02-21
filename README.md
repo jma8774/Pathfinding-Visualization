@@ -13,7 +13,7 @@ Build the project from source:
 
     git clone https://github.com/jma8774/Pathfinding-Visualization.git
     cd Pathfinding-Visualization
-    docker build -t pathfinding .
+    docker build -t pathfinding --target prod .
 
 ### Run
 
