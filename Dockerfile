@@ -1,15 +1,19 @@
 # Base Image
-FROM node:12-alpine
+FROM node:12-alpine as base
 
 # Directory in our container
 WORKDIR /app
 
-# Copy/Install dependencies into our directory in our container
+# Copy/Install dependencies into our directory
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 
-# Copy rest of files into the directory in our container
+# Test
+FROM base as test
 COPY . .
+RUN npm run test
 
-# Commands to start the app
+# Production
+FROM base as prod
+COPY . .
 CMD ["npm", "start"]
