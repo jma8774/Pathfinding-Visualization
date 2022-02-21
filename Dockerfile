@@ -8,12 +8,12 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# Test
+# Test target
 FROM base as test
 COPY . .
 RUN npm run test
 
-# Production
+# Production target
 FROM base as prod
 COPY . .
 CMD ["npm", "start"]
