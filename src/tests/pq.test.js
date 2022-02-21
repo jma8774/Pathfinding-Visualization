@@ -13,7 +13,7 @@ describe("Add Item", () => {
   let pq = [];
   // Add item 1
   test("it should add 10 as new min", () => {
-    add(pq, { cost: 7 });
+    add(pq, { cost: 10 });
     expect(pq[0]).toEqual({ cost: 10 });
   });
   // Add item 2
