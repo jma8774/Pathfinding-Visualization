@@ -25,6 +25,7 @@ jobs:
         env:
           CI: false
   deploy:
+    runs-on: ubuntu-latest
     steps:
       - name: Deploy GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.2.5
@@ -32,6 +33,7 @@ jobs:
           branch: gh-pages
           folder: build
   push-image-to-docker:
+    runs-on: ubuntu-latest
     steps:
       - name: Login to DockerHub
         uses: docker/login-action@v1
