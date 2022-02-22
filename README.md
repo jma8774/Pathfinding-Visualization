@@ -40,5 +40,7 @@ To stop the container, you can use Docker Desktop or the terminal:
 * **A-Star Search:** A version of Dijkstra's algorithm that makes use of a heuristic function that predicts which path is the best to take. Arguably the best pathfinding algorithm out there.
 
 # CI/CD Integration 
+
 Built a CI/CD pipeline using GitHuh Actions with GitHub pages and Docker to allow for easier development.
+
 ![CICD](https://i.imgur.com/byxVqTH.png)
