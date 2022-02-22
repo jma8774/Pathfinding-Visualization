@@ -4,6 +4,8 @@
 
 For those that stumble upon this, I created this website because I struggled with visualizing what each algorithm did in my head. And if struggle like me, then perhaps this can help you a little bit. Hope you enjoy!
 
+![picture](https://i.imgur.com/elAFPkg.png)
+
 # Usage
 It is hosted [here](https://www.jiamingma.me/Pathfinding-Visualization/) or install [Docker](http://docker.com) container to easily run this application locally.
 
@@ -37,6 +39,6 @@ To stop the container, you can use Docker Desktop or the terminal:
 * **Dijkstra's Algorithm:** The most famous search algorithm, it is weighted and that is guarantees that you will get the shortest path and the path with the least cost.
 * **A-Star Search:** A version of Dijkstra's algorithm that makes use of a heuristic function that predicts which path is the best to take. Arguably the best pathfinding algorithm out there.
 
-# Overview
-![picture](https://i.imgur.com/elAFPkg.png)
-
+# CI/CD Integration 
+Built a CI/CD pipeline using GitHuh Actions with GitHub pages and Docker to allow for easier development.
+![CICD](https://i.imgur.com/byxVqTH.png)
