@@ -25,12 +25,14 @@ jobs:
         env:
           CI: false
   deploy:
+    steps:
       - name: Deploy GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
           branch: gh-pages
           folder: build
   push-image-to-docker:
+    steps:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
