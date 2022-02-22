@@ -10,7 +10,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  test-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,17 +24,13 @@ jobs:
       - run: npm run build
         env:
           CI: false
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
+      # Deploy
       - name: Deploy GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
           branch: gh-pages
           folder: build
-  push-image-to-docker:
-    runs-on: ubuntu-latest
-    steps:
+      # Push new image to DockerHub
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:

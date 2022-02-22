@@ -31,7 +31,7 @@ function App() {
   const [end, setEnd] = useState([parseInt(n/2), parseInt(m/(1.5))])
   const [running, setRunning] = useState(false)
   const [speed, setSpeed] = React.useState(25);
-  const [message, setMessage] = useState('Hey there, welcome to the pathfinding visualizer! Press the question mark for instructions on how to add/delete grids.')
+  const [message, setMessage] = useState('Hi there, welcome to the pathfinding visualizer! Press the question mark for instructions on how to add/delete grids.')
   const [keyPressed, setKeyPressed] = useState('')
   const runningRef = useRef(running)
 
